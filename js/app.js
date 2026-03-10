@@ -1,0 +1,382 @@
+'use strict';
+
+// ============================================================
+// Config
+// ============================================================
+const GEOJSON_URL =
+  'https://raw.githubusercontent.com/codigourbano/distritos-sp/master/distritos-sp.geojson';
+
+const CSV_PATH = 'data/neighborhoods.csv';
+
+const DEFAULT_DISTRICT_SCORE = 5;
+
+const CRITERIA = [
+  { key: 'distance_to_nubank', label: 'Distance to Nubank', weight: 2 },
+  { key: 'public_transport',   label: 'Public Transport',   weight: 2 },
+  { key: 'safety',             label: 'Safety',             weight: 1.5 },
+  { key: 'walkability',        label: 'Walkability',        weight: 1.5 },
+  { key: 'traffic',            label: 'Low Traffic',        weight: 1 },
+  { key: 'rent_price',         label: 'Affordable Rent',    weight: 1 },
+  { key: 'buy_price',          label: 'Affordable Purchase',weight: 0.5 },
+  { key: 'green_spaces',       label: 'Green Spaces',       weight: 1 },
+  { key: 'nightlife',          label: 'Nightlife',          weight: 0.5 },
+  { key: 'family_friendly',    label: 'Family Friendly',    weight: 0.5 },
+];
+
+// Weight per criterion (mutable by sliders)
+const weights = {};
+CRITERIA.forEach(c => { weights[c.key] = c.weight; });
+
+// Default weights snapshot for reset
+const defaultWeights = {};
+CRITERIA.forEach(c => { defaultWeights[c.key] = c.weight; });
+
+// ============================================================
+// State
+// ============================================================
+let districtData = {};   // key: normalized district name → scores object
+let geoLayer = null;
+let mapOpacity = 0.82;
+
+// ============================================================
+// Map init
+// ============================================================
+const map = L.map('map', {
+  center: [-23.55, -46.63],
+  zoom: 12,
+  zoomControl: true,
+  preferCanvas: true,
+}).setView([-23.55, -46.63], 12);
+
+// Dark tile layer (CartoDB dark matter)
+L.tileLayer(
+  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }
+).addTo(map);
+
+// ============================================================
+// Scoring helpers
+// ============================================================
+function compositeScore(district) {
+  let weightedSum = 0;
+  let totalWeight = 0;
+  CRITERIA.forEach(({ key }) => {
+    const w = weights[key] || 0;
+    const score = (district && district[key] != null)
+      ? parseFloat(district[key])
+      : DEFAULT_DISTRICT_SCORE;
+    weightedSum += w * score;
+    totalWeight += w;
+  });
+  return totalWeight > 0 ? weightedSum / totalWeight : DEFAULT_DISTRICT_SCORE;
+}
+
+let colorScale = chroma.scale(['#ff4444', '#ffcc00', '#22cc44']).domain([1, 10]);
+
+function rebuildColorScale() {
+  if (!geoLayer) return;
+  const scores = [];
+  geoLayer.eachLayer(layer => {
+    const name = normalizeName(
+      layer.feature.properties.ds_nome || layer.feature.properties.NM_DISTRITO || ''
+    );
+    scores.push(compositeScore(districtData[name]));
+  });
+  if (scores.length === 0) return;
+  const min = Math.min(...scores);
+  const max = Math.max(...scores);
+  // Keep a small padding so extreme districts get full red/green
+  const pad = (max - min) * 0.05;
+  colorScale = chroma.scale(['#ff4444', '#ffcc00', '#22cc44'])
+    .domain([min - pad, (min + max) / 2, max + pad]);
+}
+
+function scoreToColor(score) {
+  return colorScale(score).hex();
+}
+
+// ============================================================
+// Normalize district names for matching
+// ============================================================
+function normalizeName(name) {
+  return (name || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')  // strip accents
+    .replace(/[^a-z0-9 ]/gi, '')
+    .trim()
+    .toUpperCase();
+}
+
+// ============================================================
+// GeoJSON layer
+// ============================================================
+function styleFeature(feature) {
+  const name = normalizeName(
+    feature.properties.ds_nome || feature.properties.NM_DISTRITO || ''
+  );
+  const district = districtData[name];
+  const score = compositeScore(district);
+  return {
+    fillColor: scoreToColor(score),
+    fillOpacity: mapOpacity,
+    color: '#1a0028',
+    weight: 1,
+    opacity: 0.6,
+  };
+}
+
+function onEachFeature(feature, layer) {
+  const rawName = feature.properties.ds_nome || feature.properties.NM_DISTRITO || 'Unknown';
+  const name = normalizeName(rawName);
+
+  layer.on({
+    mouseover(e) {
+      const district = districtData[name];
+      const score = compositeScore(district).toFixed(1);
+      layer.setStyle({ weight: 2.5, fillOpacity: 0.88, color: '#c26ef0' });
+      layer.getTooltip() && layer.closeTooltip();
+      layer.bindTooltip(
+        `<div class="district-tooltip"><b>${rawName}</b>Score: ${score} / 10</div>`,
+        { sticky: true, permanent: false, opacity: 1, className: '' }
+      ).openTooltip(e.latlng);
+    },
+    mouseout() {
+      geoLayer.resetStyle(layer);
+    },
+    click() {
+      showDistrictDetail(rawName, name);
+      openPopup(rawName, name, layer);
+    },
+  });
+}
+
+function openPopup(rawName, name, layer) {
+  const district = districtData[name];
+  const score = compositeScore(district).toFixed(1);
+
+  const rows = CRITERIA.map(({ key, label }) => {
+    const val = district && district[key] != null ? parseFloat(district[key]).toFixed(0) : '—';
+    return `<tr><td>${label}</td><td>${val}</td></tr>`;
+  }).join('');
+
+  layer.bindPopup(
+    `<div class="popup-name">${rawName}</div>
+     <div class="popup-score">${score} <small>/ 10</small></div>
+     <table class="popup-table">${rows}</table>`,
+    { maxWidth: 220 }
+  ).openPopup();
+}
+
+// ============================================================
+// District detail sidebar panel
+// ============================================================
+function showDistrictDetail(rawName, normName) {
+  const panel = document.getElementById('district-detail');
+  const content = document.getElementById('detail-content');
+  const district = districtData[normName];
+  const score = compositeScore(district);
+
+  const bars = CRITERIA.map(({ key, label }) => {
+    const val = district && district[key] != null ? parseFloat(district[key]) : DEFAULT_DISTRICT_SCORE;
+    const pct = (val / 10) * 100;
+    return `
+      <div class="detail-bar-row">
+        <span class="detail-bar-label">${label}</span>
+        <span class="detail-bar-val">${val.toFixed(0)}</span>
+        <div class="detail-bar-track">
+          <div class="detail-bar-fill" style="width:${pct}%"></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const notes = district && district.notes
+    ? `<div class="detail-notes">${district.notes}</div>`
+    : '';
+
+  content.innerHTML = `
+    <div class="detail-name">${rawName}</div>
+    <div class="detail-score">${score.toFixed(1)} <span>/ 10 composite</span></div>
+    <div class="detail-bars">${bars}</div>
+    ${notes}
+  `;
+
+  panel.style.display = 'block';
+
+  // Scroll sidebar to detail panel
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ============================================================
+// Recolor map
+// ============================================================
+function recolorMap() {
+  if (!geoLayer) return;
+  rebuildColorScale();
+  geoLayer.setStyle(styleFeature);
+}
+
+// ============================================================
+// Sliders
+// ============================================================
+function buildSliders() {
+  const container = document.getElementById('sliders-container');
+  container.innerHTML = '';
+
+  CRITERIA.forEach(({ key, label }) => {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'slider-label';
+    lbl.textContent = label;
+
+    const val = document.createElement('span');
+    val.className = 'slider-value';
+    val.textContent = weights[key].toFixed(1) + '×';
+
+    const input = document.createElement('input');
+    input.type = 'range';
+    input.min = '0';
+    input.max = '5';
+    input.step = '0.1';
+    input.value = weights[key];
+    input.dataset.key = key;
+
+    input.addEventListener('input', () => {
+      weights[key] = parseFloat(input.value);
+      val.textContent = weights[key].toFixed(1) + '×';
+      recolorMap();
+    });
+
+    row.append(lbl, val, input);
+    container.appendChild(row);
+  });
+}
+
+document.getElementById('reset-weights').addEventListener('click', () => {
+  CRITERIA.forEach(c => { weights[c.key] = defaultWeights[c.key]; });
+  buildSliders();
+  recolorMap();
+});
+
+document.getElementById('opacity-slider').addEventListener('input', function () {
+  mapOpacity = parseInt(this.value) / 100;
+  document.getElementById('opacity-value').textContent = this.value + '%';
+  recolorMap();
+});
+
+// ============================================================
+// CSV parsing & loading
+// ============================================================
+function parseCSV(csvText) {
+  const result = Papa.parse(csvText, {
+    header: true,
+    skipEmptyLines: true,
+    dynamicTyping: false,
+  });
+  const data = {};
+  result.data.forEach(row => {
+    const name = normalizeName(row.district);
+    if (name) data[name] = row;
+  });
+  return data;
+}
+
+function setCSVStatus(msg, type = '') {
+  const el = document.getElementById('csv-status');
+  el.textContent = msg;
+  el.className = type;
+}
+
+async function loadDefaultCSV() {
+  try {
+    const resp = await fetch(CSV_PATH);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const text = await resp.text();
+    districtData = parseCSV(text);
+    setCSVStatus(`Loaded ${Object.keys(districtData).length} districts.`, 'success');
+    recolorMap();
+  } catch (err) {
+    setCSVStatus('Could not load default CSV. Using fallback scores.', 'error');
+    console.warn('CSV load error:', err);
+  }
+}
+
+// File input handler
+document.getElementById('csv-input').addEventListener('change', function () {
+  const file = this.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    districtData = parseCSV(e.target.result);
+    recolorMap();
+    setCSVStatus(`Loaded ${Object.keys(districtData).length} districts from "${file.name}".`, 'success');
+  };
+  reader.onerror = () => setCSVStatus('Error reading file.', 'error');
+  reader.readAsText(file);
+  this.value = ''; // reset so same file can be reloaded
+});
+
+// Download CSV
+document.getElementById('download-csv').addEventListener('click', () => {
+  const csvText = Papa.unparse(
+    Object.values(districtData),
+    { columns: ['district', ...CRITERIA.map(c => c.key), 'notes'] }
+  );
+  const blob = new Blob([csvText], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'neighborhoods.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ============================================================
+// Sidebar toggle (mobile)
+// ============================================================
+const sidebarToggle = document.getElementById('sidebar-toggle');
+const sidebarBody = document.getElementById('sidebar-body');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebarBody.classList.toggle('collapsed');
+  sidebarToggle.classList.toggle('open');
+  sidebarToggle.textContent = sidebarBody.classList.contains('collapsed') ? '▲' : '▼';
+});
+
+// ============================================================
+// Bootstrap: load GeoJSON + CSV
+// ============================================================
+async function init() {
+  buildSliders();
+
+  // Load CSV first (fast, local)
+  await loadDefaultCSV();
+
+  // Load GeoJSON
+  try {
+    const resp = await fetch(GEOJSON_URL);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const geojson = await resp.json();
+
+    geoLayer = L.geoJSON(geojson, {
+      style: styleFeature,
+      onEachFeature,
+    }).addTo(map);
+
+    // Fit map to SP districts
+    map.fitBounds(geoLayer.getBounds(), { padding: [20, 20] });
+
+    // Stretch color scale to actual data range now that layer is built
+    recolorMap();
+  } catch (err) {
+    console.error('GeoJSON load error:', err);
+    setCSVStatus('Error loading district polygons. Check your internet connection.', 'error');
+  }
+}
+
+init();
