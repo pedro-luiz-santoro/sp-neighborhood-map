@@ -9,7 +9,7 @@ You need Python 3 (pre-installed on macOS) or any static file server. **Do not o
 **Clone and run:**
 
 ```bash
-git clone https://github.com/nubank/sp-neighborhood-map.git
+git clone https://github.com/pedro-luiz-santoro/sp-neighborhood-map.git
 cd sp-neighborhood-map
 python3 -m http.server 8080
 ```
@@ -61,6 +61,10 @@ Districts not present in the CSV default to **5** for all criteria.
 `data/neighborhoods.csv` is a plain spreadsheet — open it in Excel, Numbers, or Google Sheets, edit any scores, save, then use the **Load CSV** button in the sidebar to apply your changes without touching any code.
 
 If you want to persist your changes for everyone, edit the CSV and open a PR.
+
+## Data disclaimer
+
+The default scores in `data/neighborhoods.csv` were generated with AI assistance and reviewed by a human, but may still contain errors or reflect outdated information. Use them as a starting point — you are encouraged to edit the CSV with your own research and load it back via the **Load CSV** button.
 
 ## Data sources
 

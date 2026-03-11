@@ -1,5 +1,5 @@
 district,distance_to_nubank,safety,walkability,traffic,rent_price,buy_price,green_spaces,nightlife,family_friendly,public_transport,notes
-PINHEIROS,10,6,9,4,3,3,7,9,6,10,Nubank HQ. Oscar Freire (L2) at doorstep. Faria Lima is among SP's most congested arteries. Phone snatch risk near bars is real.
+PINHEIROS,10,6,9,4,3,3,7,9,6,10,Nubank HQ. Oscar Freire (L4 Yellow) at doorstep. Faria Lima is among SP's most congested arteries. Phone snatch risk near bars is real.
 ALTO DE PINHEIROS,9,9,7,6,4,3,8,5,8,7,Quiet upper-residential streets. very low foot-traffic density. One of the safer areas in the city near Nubank.
 PERDIZES,8,8,8,6,5,4,7,6,8,8,Sumaré (L2) nearby. Primarily residential with good schools. Lower commercial density keeps street robbery rates moderate-low.
 VILA MADALENA,8,6,10,5,4,4,6,10,5,9,Vila Madalena (L2) station. Dense nightlife elevates phone robbery at night near Rua Wisard/Harmonia. Safe during the day.
@@ -9,10 +9,10 @@ BELA VISTA,7,6,9,4,5,5,5,8,6,8,Historical Bixiga. Trianon-Masp (L2) nearby. Paul
 REPÚBLICA,6,3,8,4,7,7,4,7,4,8,One of SP's highest street robbery concentrations. Downtown congestion + major transit hub + homeless presence + tourist foot traffic. Phone theft very common.
 LIBERDADE,7,6,9,5,6,6,4,7,6,8,Liberdade (L1). Downtown adjacent. Market streets attract pickpockets. Safer than República but vigilance needed.
 CAMBUCI,7,6,7,6,7,7,5,6,7,6,Transitional residential. Lower foot traffic than nearby downtown. Improving safety trend. No metro but bus connections to Paraíso.
-SANTA CECÍLIA,7,6,9,5,6,6,4,8,5,8,Santa Cecília (L2). Bar scene and proximity to República elevates risk at night. Caution near Largo do Arouche.
-BARRA FUNDA,6,5,7,5,6,6,5,6,5,9,Barra Funda (L2 + CPTM L8/L9). Excellent multi-modal transit. Industrial character softening with gentrification but street crime remains.
+SANTA CECÍLIA,7,6,9,5,6,6,4,8,5,8,Santa Cecília (L3). Bar scene and proximity to República elevates risk at night. Caution near Largo do Arouche.
+BARRA FUNDA,6,5,7,5,6,6,5,6,5,9,Barra Funda (L3 + CPTM L8/L9). Excellent multi-modal transit. Industrial character softening with gentrification but street crime remains.
 VILA LEOPOLDINA,7,7,7,6,5,5,6,5,6,6,CPTM L9 (Villa Lobos-Jaguaré). Quiet residential. low occurrence rates. Expat community growing. Good value near Pinheiros.
-LAPA,7,6,8,6,6,6,5,6,6,7,Lapa (L3 + CPTM). Traditional bairro. Commercial hub at Largo da Lapa has pickpocketing. Residential streets generally calm.
+LAPA,7,6,8,6,6,6,5,6,6,7,Lapa (CPTM L8/L9). Traditional bairro. Commercial hub at Largo da Lapa has pickpocketing. Residential streets generally calm.
 VILA ROMANA,7,7,7,6,6,6,5,5,7,6,Mostly residential. low commercial density. Fewer street robbery occurrences than neighboring Lapa center. Good value.
 ITAIM BIBI,6,6,9,3,3,3,6,8,6,5,Faria Lima + Av. Brigadeiro + Juscelino: some of SP's worst traffic. Restaurant terraces are a known phone snatch hotspot. No metro nearby.
 MOEMA,7,8,9,5,3,3,9,6,8,8,Moema (L5). Leafy and upscale. Low homicide rate. moderate phone theft near mall entrances. Among the safer south-zone profiles.
@@ -31,7 +31,7 @@ TUCURUVI,3,7,6,6,7,7,4,4,7,7,Tucuruvi (L1 northern terminus). Community feel. lo
 VILA GUILHERME,3,6,6,6,7,7,4,4,6,6,Northern zone. Moderate risk. Industrial corridor nearby affects some areas. Residential blocks reasonably calm. Far from Nubank.
 CASA VERDE,3,7,6,6,7,7,5,4,7,6,Northern residential. Lower crime than downtown equivalents. Community-oriented streets. Long commute is the main limitation.
 BUTANTÃ,6,7,7,6,6,6,6,5,7,8,Butantã (L4 Yellow — direct to Oscar Freire/Nubank). USP campus community. Moderate safety; areas near campus periphery have higher risk.
-MORUMBI,5,6,7,5,4,4,8,5,8,4,Highly uneven: gated condos vs areas bordering Paraisópolis favela. No metro. Average masks very wide safety and quality-of-life variance.
+MORUMBI,5,6,7,5,4,4,8,5,8,8,Highly uneven: gated condos vs areas bordering Paraisópolis favela. São Paulo-Morumbi (L4 Yellow) gives direct access to Oscar Freire/Nubank. Average masks very wide safety and quality-of-life variance.
 SÉ,5,3,7,3,9,8,5,6,3,10,Sé station (L1+L3 major interchange). Historic center with highest pedestrian crime in SP. Excellent transit; very poor safety and family profile.
 ÁGUA RASA,4,6,6,5,7,7,5,4,7,6,East-zone middle-class residential. Calm streets. Near bus corridors connecting to L3 (Tatuapé/Carrão). Affordable and stable.
 ARICANDUVA,3,6,5,4,8,8,7,3,7,5,East zone adjacent to Parque Aricanduva. Good green space. Av. Aricanduva is heavily congested. Working-class residential feel.
