@@ -44,7 +44,7 @@ All scores are **1–10** (10 = best for living). The composite score is a weigh
 | Criterion | Default weight | Notes |
 |---|---|---|
 | Distance to Nubank | 2× | 10 = walking distance to Pinheiros office |
-| Public Transport | 2× | 10 = direct metro to Fradique Coutinho (L4) |
+| Public Transport | 2× | 10 = direct metro to Oscar Freire (L2), closest station to Nubank |
 | Safety | 1.5× | Based on SSP-SP crime data patterns |
 | Walkability | 1.5× | Pedestrian infrastructure and mixed-use density |
 | Low Traffic | 1× | 10 = very low congestion |
@@ -66,7 +66,7 @@ If you want to persist your changes for everyone, edit the CSV and open a PR.
 
 - **District polygons**: [codigourbano/distritos-sp](https://github.com/codigourbano/distritos-sp) — SP's 96 official IBGE districts, fetched at runtime
 - **Safety scores**: Derived from SSP-SP crime bulletin patterns (homicide rate, roubo a pedestre, furto/roubo de celular by district)
-- **Transit scores**: Based on SP Metro and CPTM network proximity and transfer count to Fradique Coutinho (L4)
+- **Transit scores**: Based on SP Metro and CPTM network proximity and transfer count to Oscar Freire (L2), the closest station to Nubank
 - **Map tiles**: CartoDB Dark Matter via OpenStreetMap
 
 ## Tech stack

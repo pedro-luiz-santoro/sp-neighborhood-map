@@ -1,5 +1,5 @@
 district,distance_to_nubank,safety,walkability,traffic,rent_price,buy_price,green_spaces,nightlife,family_friendly,public_transport,notes
-PINHEIROS,10,6,9,4,3,3,7,9,6,10,Nubank HQ. Fradique Coutinho (L4) at doorstep. Faria Lima is among SP's most congested arteries. Phone snatch risk near bars is real.
+PINHEIROS,10,6,9,4,3,3,7,9,6,10,Nubank HQ. Oscar Freire (L2) at doorstep. Faria Lima is among SP's most congested arteries. Phone snatch risk near bars is real.
 ALTO DE PINHEIROS,9,9,7,6,4,3,8,5,8,7,Quiet upper-residential streets. very low foot-traffic density. One of the safer areas in the city near Nubank.
 PERDIZES,8,8,8,6,5,4,7,6,8,8,Sumaré (L2) nearby. Primarily residential with good schools. Lower commercial density keeps street robbery rates moderate-low.
 VILA MADALENA,8,6,10,5,4,4,6,10,5,9,Vila Madalena (L2) station. Dense nightlife elevates phone robbery at night near Rua Wisard/Harmonia. Safe during the day.
@@ -30,7 +30,7 @@ SANTANA,4,7,7,6,6,6,5,5,7,8,Santana (L1) + Carandiru. Northern residential hub. 
 TUCURUVI,3,7,6,6,7,7,4,4,7,7,Tucuruvi (L1 northern terminus). Community feel. lower crime than downtown. Long commute to Pinheiros is the main trade-off.
 VILA GUILHERME,3,6,6,6,7,7,4,4,6,6,Northern zone. Moderate risk. Industrial corridor nearby affects some areas. Residential blocks reasonably calm. Far from Nubank.
 CASA VERDE,3,7,6,6,7,7,5,4,7,6,Northern residential. Lower crime than downtown equivalents. Community-oriented streets. Long commute is the main limitation.
-BUTANTÃ,6,7,7,6,6,6,6,5,7,8,Butantã (L4 Yellow — direct to Nubank). USP campus community. Moderate safety; areas near campus periphery have higher risk.
+BUTANTÃ,6,7,7,6,6,6,6,5,7,8,Butantã (L4 Yellow — direct to Oscar Freire/Nubank). USP campus community. Moderate safety; areas near campus periphery have higher risk.
 MORUMBI,5,6,7,5,4,4,8,5,8,4,Highly uneven: gated condos vs areas bordering Paraisópolis favela. No metro. Average masks very wide safety and quality-of-life variance.
 SÉ,5,3,7,3,9,8,5,6,3,10,Sé station (L1+L3 major interchange). Historic center with highest pedestrian crime in SP. Excellent transit; very poor safety and family profile.
 ÁGUA RASA,4,6,6,5,7,7,5,4,7,6,East-zone middle-class residential. Calm streets. Near bus corridors connecting to L3 (Tatuapé/Carrão). Affordable and stable.
@@ -95,6 +95,6 @@ VILA MARIA,3,6,6,5,8,8,5,4,7,6,Northern residential. Vila Maria station (CPTM L1
 VILA MATILDE,3,6,6,5,7,7,5,4,7,7,Vila Matilde (L3). East-zone residential with direct metro. Moderate commute to Nubank. Stable and affordable.
 VILA MEDEIROS,3,6,5,5,8,8,5,3,7,5,North zone residential. Quiet. Limited urban amenities. Moderate commute. Good family environment.
 VILA PRUDENTE,4,6,6,5,7,7,6,5,7,8,Vila Prudente (L2 eastern terminus). Direct Line 2 to Consolação/Pinheiros direction — one of the best transit values in the east zone. Gentrifying.
-VILA SÔNIA,5,7,6,5,7,7,6,5,7,8,Vila Sônia (L4 Yellow — direct line to Fradique Coutinho/Nubank). Underrated western residential with the most direct metro link to Nubank outside Pinheiros itself.
+VILA SÔNIA,5,7,6,5,7,7,6,5,7,8,Vila Sônia (L4 Yellow — direct line to Oscar Freire/Nubank via L4). Underrated western residential with the most direct metro link to Nubank outside Pinheiros itself.
 SÃO LUCAS,4,6,6,5,7,7,7,4,7,7,East-zone residential in Vila Prudente subprefecture. Borders Ipiranga and Parque do Estado (large green area nearby). Near Vila Prudente (L2) for direct access to Consolação/Pinheiros direction. Quiet working-class neighborhood with improving infrastructure.
 GUAIANASES,1,5,5,6,10,10,4,2,6,7,Eastern terminus of L3 (alternate spelling used in some GeoJSON sources). Very affordable. metro-connected but commute to Nubank exceeds one hour. Not practical for daily in-office work.
