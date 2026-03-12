@@ -2,7 +2,7 @@
 
 An interactive map of São Paulo's 96 official districts to help Nubankers evaluate neighborhoods before relocating. Districts are colored by a composite score built from criteria like safety, walkability, distance to the Pinheiros office, rent prices, and public transport access. All weights are adjustable in real time via sliders.
 
-<!-- IMAGE: full app screenshot (map + sidebar) -->
+<img width="1717" height="989" alt="Screenshot 2026-03-12 at 12 38 59" src="https://github.com/user-attachments/assets/f06d051b-b06a-46a7-9fdd-dcbefa4680b0" />
 
 ---
 
@@ -11,17 +11,20 @@ An interactive map of São Paulo's 96 official districts to help Nubankers evalu
 ### Choropleth map
 Districts are color-coded from red (low score) to green (high score) using a dynamic scale that stretches to the actual data range. Hover over any district to see its name and composite score; click to open a detailed breakdown.
 
-<!-- IMAGE: hover tooltip and/or map overview -->
+<img width="1717" height="989" alt="Screenshot 2026-03-12 at 12 40 59" src="https://github.com/user-attachments/assets/39ed2d6f-b81d-48d0-85b4-91c5901b394b" />
+
 
 ### Weight sliders
 Each scoring criterion has a weight slider (0–5×). Drag any slider and the map recolors instantly, letting you tune the ranking to your personal priorities. A **Reset Weights** button restores all defaults.
 
-<!-- IMAGE: weight sliders panel -->
+<img width="1717" height="989" alt="Screenshot 2026-03-12 at 12 42 16" src="https://github.com/user-attachments/assets/e5c99b26-c855-41b6-97fb-49314bdc24aa" />
+
 
 ### Filter Districts
 Set a minimum score per criterion to grey out districts that don't meet your hard requirements. Filtered-out districts appear desaturated on the map so the qualifying ones stand out clearly. A **Reset Filters** button clears all minimums.
 
-<!-- IMAGE: filter sliders with some greyed-out districts -->
+<img width="1717" height="989" alt="Screenshot 2026-03-12 at 12 44 23" src="https://github.com/user-attachments/assets/7b5310e2-84a4-4a5e-a5ae-ef5e96f8767e" />
+
 
 ### District Detail panel
 Click any district to open a sidebar panel showing:
@@ -30,12 +33,14 @@ Click any district to open a sidebar panel showing:
 - Free-text notes (when available in the CSV)
 - List of **neighbourhoods (bairros)** within the district
 
-<!-- IMAGE: district detail panel -->
+<img width="339" height="637" alt="image" src="https://github.com/user-attachments/assets/0ae97558-25d5-4fbf-8119-071dd082d99e" />
+
 
 ### Compare mode
 Click the **Compare** button in the District Detail panel to enter compare mode. Select up to 4 districts using the checkboxes in their detail panels; a horizontal bar chart renders side-by-side scores for all selected districts. Click **Done** or ✕ to exit compare mode.
 
-<!-- IMAGE: compare panel with bar chart -->
+<img width="714" height="986" alt="image" src="https://github.com/user-attachments/assets/cfcde6d6-aa39-4398-81e6-fb91e4fd07fa" />
+
 
 ### CSV data management
 | Action | How |
