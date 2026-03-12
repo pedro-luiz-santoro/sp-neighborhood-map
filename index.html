@@ -55,6 +55,7 @@
         <div class="logo">
           <span class="logo-mark">●</span>
           <span class="logo-text">SP District Map</span>
+          <a href="https://github.com/pedro-luiz-santoro/sp-neighborhood-map/blob/main/data/README.md" target="_blank" class="help-btn" title="More Information on Data" aria-label="More Information on Data">?</a>
         </div>
         <p class="subtitle">Nubank Relocation Guide</p>
         <button id="sidebar-toggle" aria-label="Toggle sidebar">▼</button>
@@ -62,16 +63,40 @@
 
       <div id="sidebar-body">
 
-        <section class="sidebar-section">
-          <h3>Weight Sliders</h3>
-          <p class="section-hint">Drag to prioritize what matters most. Map updates instantly.</p>
-
-          <div id="sliders-container">
-            <!-- Sliders injected by JS -->
+        <section class="sidebar-section section-collapsed">
+          <div class="section-header">
+            <h3>Weight Sliders</h3>
+            <button class="section-toggle" aria-label="Toggle section">></button>
           </div>
+          <div class="section-body">
+            <p class="section-hint">Drag to prioritize what matters most. Map updates instantly.</p>
 
-          <button id="reset-weights" class="btn btn-secondary">Reset Weights</button>
+            <div id="sliders-container">
+              <!-- Sliders injected by JS -->
+            </div>
 
+            <button id="reset-weights" class="btn btn-secondary">Reset Weights</button>
+          </div>
+        </section>
+
+        <section class="sidebar-section section-collapsed">
+          <div class="section-header">
+            <h3>Filter Districts</h3>
+            <button class="section-toggle" aria-label="Toggle section">></button>
+          </div>
+          <div class="section-body">
+            <p class="section-hint">
+              Grey out districts that score below a minimum in any indicator.
+              <a href="https://github.com/pedro-luiz-santoro/sp-neighborhood-map/blob/main/data/README.md" target="_blank" class="section-link">Learn about indicators →</a>
+            </p>
+            <div id="filters-container">
+              <!-- Filter sliders injected by JS -->
+            </div>
+            <button id="reset-filters" class="btn btn-secondary">Reset Filters</button>
+          </div>
+        </section>
+
+        <section class="sidebar-section">
           <div class="opacity-row">
             <span class="slider-label">Map Opacity</span>
             <span class="slider-value" id="opacity-value">82%</span>

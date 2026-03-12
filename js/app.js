@@ -32,6 +32,10 @@ CRITERIA.forEach(c => { weights[c.key] = c.weight; });
 const defaultWeights = {};
 CRITERIA.forEach(c => { defaultWeights[c.key] = c.weight; });
 
+// Minimum score filters (0 = no filter)
+const minFilters = {};
+CRITERIA.forEach(c => { minFilters[c.key] = 0; });
+
 // ============================================================
 // State
 // ============================================================
@@ -115,6 +119,17 @@ function scoreToColor(score) {
   return colorScale(score).hex();
 }
 
+function meetsFilters(district) {
+  return CRITERIA.every(({ key }) => {
+    const min = minFilters[key] || 0;
+    if (min === 0) return true;
+    const val = district && district[key] != null
+      ? parseFloat(district[key])
+      : DEFAULT_DISTRICT_SCORE;
+    return val >= min;
+  });
+}
+
 // ============================================================
 // Normalize district names for matching
 // ============================================================
@@ -136,12 +151,13 @@ function styleFeature(feature) {
   );
   const district = districtData[name];
   const score = compositeScore(district);
+  const filtered = !meetsFilters(district);
   return {
-    fillColor: scoreToColor(score),
-    fillOpacity: mapOpacity,
+    fillColor: filtered ? '#444' : scoreToColor(score),
+    fillOpacity: filtered ? 0.2 : mapOpacity,
     color: '#1a0028',
     weight: 1,
-    opacity: 0.6,
+    opacity: filtered ? 0.3 : 0.6,
   };
 }
 
@@ -276,33 +292,45 @@ function showDistrictDetail(rawName, normName) {
 function initRadarChart() {
   const ctx = document.getElementById('compare-chart').getContext('2d');
   radarChart = new Chart(ctx, {
-    type: 'radar',
+    type: 'bar',
     data: {
       labels: CRITERIA.map(c => c.label),
       datasets: [],
     },
     options: {
+      indexAxis: 'y',
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { display: false },
+        legend: {
+          display: true,
+          labels: {
+            color: '#f0e6fa',
+            font: { size: 10 },
+            boxWidth: 12,
+            padding: 10,
+          },
+        },
       },
       scales: {
-        r: {
+        x: {
           min: 0,
           max: 10,
           ticks: {
             stepSize: 2,
             color: '#a080c0',
-            backdropColor: 'transparent',
             font: { size: 9 },
           },
           grid: { color: '#2a0040' },
-          angleLines: { color: '#2a0040' },
-          pointLabels: {
+          border: { color: '#2a0040' },
+        },
+        y: {
+          ticks: {
             color: '#f0e6fa',
             font: { size: 9 },
           },
+          grid: { color: '#2a0040' },
+          border: { color: '#2a0040' },
         },
       },
     },
@@ -320,11 +348,10 @@ function updateRadarChart() {
     return {
       label: d.rawName,
       data,
-      backgroundColor: color.fill,
+      backgroundColor: color.fill.replace('0.2', '0.75'),
       borderColor: color.border,
-      borderWidth: 2,
-      pointBackgroundColor: color.border,
-      pointRadius: 3,
+      borderWidth: 1,
+      borderRadius: 3,
     };
   });
   radarChart.update();
@@ -429,6 +456,61 @@ document.getElementById('reset-weights').addEventListener('click', () => {
   buildSliders();
   recolorMap();
 });
+
+// ============================================================
+// Filter sliders
+// ============================================================
+function buildFilterSliders() {
+  const container = document.getElementById('filters-container');
+  container.innerHTML = '';
+
+  CRITERIA.forEach(({ key, label }) => {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+
+    const lbl = document.createElement('span');
+    lbl.className = 'slider-label';
+    lbl.textContent = label;
+
+    const val = document.createElement('span');
+    val.className = 'slider-value';
+    val.textContent = minFilters[key] === 0 ? 'Off' : '≥ ' + minFilters[key];
+
+    const input = document.createElement('input');
+    input.type = 'range';
+    input.min = '0';
+    input.max = '9';
+    input.step = '1';
+    input.value = minFilters[key];
+    input.dataset.key = key;
+
+    input.addEventListener('input', () => {
+      minFilters[key] = parseInt(input.value);
+      val.textContent = minFilters[key] === 0 ? 'Off' : '≥ ' + minFilters[key];
+      recolorMap();
+    });
+
+    row.append(lbl, val, input);
+    container.appendChild(row);
+  });
+}
+
+document.getElementById('reset-filters').addEventListener('click', () => {
+  CRITERIA.forEach(c => { minFilters[c.key] = 0; });
+  buildFilterSliders();
+  recolorMap();
+});
+
+// ============================================================
+// Section collapse toggles
+// ============================================================
+function initSectionToggles() {
+  document.querySelectorAll('.section-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.closest('.sidebar-section').classList.toggle('section-collapsed');
+    });
+  });
+}
 
 document.getElementById('opacity-slider').addEventListener('input', function () {
   mapOpacity = parseInt(this.value) / 100;
@@ -558,6 +640,8 @@ document.getElementById('compare-close-btn').addEventListener('click', () => {
 // ============================================================
 async function init() {
   buildSliders();
+  buildFilterSliders();
+  initSectionToggles();
 
   // Load CSV + bairros (fast, local)
   await loadDefaultCSV();
