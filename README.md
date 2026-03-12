@@ -2,6 +2,56 @@
 
 An interactive map of São Paulo's 96 official districts to help Nubankers evaluate neighborhoods before relocating. Districts are colored by a composite score built from criteria like safety, walkability, distance to the Pinheiros office, rent prices, and public transport access. All weights are adjustable in real time via sliders.
 
+<!-- IMAGE: full app screenshot (map + sidebar) -->
+
+---
+
+## Features
+
+### Choropleth map
+Districts are color-coded from red (low score) to green (high score) using a dynamic scale that stretches to the actual data range. Hover over any district to see its name and composite score; click to open a detailed breakdown.
+
+<!-- IMAGE: hover tooltip and/or map overview -->
+
+### Weight sliders
+Each scoring criterion has a weight slider (0–5×). Drag any slider and the map recolors instantly, letting you tune the ranking to your personal priorities. A **Reset Weights** button restores all defaults.
+
+<!-- IMAGE: weight sliders panel -->
+
+### Filter Districts
+Set a minimum score per criterion to grey out districts that don't meet your hard requirements. Filtered-out districts appear desaturated on the map so the qualifying ones stand out clearly. A **Reset Filters** button clears all minimums.
+
+<!-- IMAGE: filter sliders with some greyed-out districts -->
+
+### District Detail panel
+Click any district to open a sidebar panel showing:
+- Composite score
+- Per-criterion score bars (visual bar + numeric value)
+- Free-text notes (when available in the CSV)
+- List of **neighbourhoods (bairros)** within the district
+
+<!-- IMAGE: district detail panel -->
+
+### Compare mode
+Click the **Compare** button in the District Detail panel to enter compare mode. Select up to 4 districts using the checkboxes in their detail panels; a horizontal bar chart renders side-by-side scores for all selected districts. Click **Done** or ✕ to exit compare mode.
+
+<!-- IMAGE: compare panel with bar chart -->
+
+### CSV data management
+| Action | How |
+|---|---|
+| Edit scores | Open `data/neighborhoods.csv` in any spreadsheet app |
+| Reload | **Load CSV** button in the sidebar |
+| Export | **Download CSV** button exports the current dataset |
+
+### Map opacity slider
+A slider in the sidebar controls the opacity of the choropleth layer (10–100 %), making it easy to see the underlying basemap tiles when needed.
+
+### Collapsible sections
+The **Weight Sliders** and **Filter Districts** sidebar sections can be collapsed to save space. They start collapsed by default; click the section header to expand.
+
+---
+
 ## Running locally
 
 You need Python 3 (pre-installed on macOS) or any static file server. **Do not open `index.html` directly as a file** — the app fetches the GeoJSON and CSV at runtime, which requires an HTTP server.
@@ -26,16 +76,7 @@ npx serve .
 ruby -run -e httpd . -p 8080
 ```
 
-## How to use it
-
-| Interaction | What happens |
-|---|---|
-| Hover over a district | Tooltip with name and composite score |
-| Click a district | Popup with all individual scores + sidebar breakdown |
-| Drag a weight slider | Map recolors instantly |
-| Click "Reset Weights" | All sliders back to defaults |
-| Click "Load CSV" | Load your edited CSV to update all scores |
-| Click "Download CSV" | Export the current dataset to edit externally |
+---
 
 ## Scoring criteria
 
@@ -56,6 +97,8 @@ All scores are **1–10** (10 = best for living). The composite score is a weigh
 
 Districts not present in the CSV default to **5** for all criteria.
 
+---
+
 ## Customizing the data
 
 `data/neighborhoods.csv` is a plain spreadsheet — open it in Excel, Numbers, or Google Sheets, edit any scores, save, then use the **Load CSV** button in the sidebar to apply your changes without touching any code.
@@ -64,16 +107,23 @@ For full documentation on scoring methodology, data sources, and how each criter
 
 If you want to persist your changes for everyone, edit the CSV and open a PR.
 
+---
+
 ## Data disclaimer
 
 The default scores in `data/neighborhoods.csv` were generated with AI assistance and reviewed by a human, but may still contain errors or reflect outdated information. Use them as a starting point — you are encouraged to edit the CSV with your own research and load it back via the **Load CSV** button.
+
+---
 
 ## Data sources
 
 - **District polygons**: [codigourbano/distritos-sp](https://github.com/codigourbano/distritos-sp) — SP's 96 official IBGE districts, fetched at runtime
 - **Safety scores**: Blended from homicide rate (Mapa da Desigualdade 2024) and street robbery per capita (SSP-SP Dados Criminais 2022–2024, 93 DECAP delegacias)
 - **Transit scores**: Based on SP Metro and CPTM network proximity and transfer count to Oscar Freire (L4), the closest station to Nubank
+- **Neighbourhoods (bairros)**: Compiled from saopauloaqui.com.br, Wikipedia, Prefeitura SP, saopaulobairros.com.br, spbairros.com.br
 - **Map tiles**: CartoDB Dark Matter via OpenStreetMap
+
+---
 
 ## Tech stack
 
@@ -82,4 +132,5 @@ No build step, no npm, no dependencies to install.
 - [Leaflet.js](https://leafletjs.com/) — map rendering and choropleth
 - [chroma.js](https://gka.github.io/chroma.js/) — dynamic color scale
 - [PapaParse](https://www.papaparse.com/) — CSV parsing in the browser
+- [Chart.js](https://www.chartjs.org/) — horizontal bar chart for district comparison
 - Vanilla HTML/CSS/JS — all libraries loaded via CDN
